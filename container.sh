@@ -46,6 +46,12 @@ do
   variable=$(echo "$i" | cut -d'=' -f1)
   value=$(echo "$i" | cut -d'=' -f2)
 
+  if [ -z "$value" ] || [ -z "$variable" ] ; 
+  then 
+	  #Ignore empty vars
+	  continue;
+  fi	  	  	
+
   if [[ $variable == ENV_* ]] || [[ $variable == AWS_* ]] || [[ $variable == APP_* ]] || [[ $variable == RDS_* ]] || [[ $variable == PHP_* ]] ;
   then
 	#Append variable to PHP pool config file
@@ -100,4 +106,5 @@ then
   bash /var/www/init.sh
 else
 	#Download readme to /var/www
+	echo "<?php phpinfo();" >> /var/www/index.php
 fi

@@ -3,6 +3,9 @@ FROM php:7-fpm-alpine
 
 MAINTAINER Adrian7 <adrian.silimon@yahoo.com>
 
+#Arguments
+ARG BUILD_CONFIG=dev
+
 #Install
 
 RUN apk --no-cache add \
@@ -36,8 +39,12 @@ RUN apk --no-cache add \
 	
 #Configure
 
+COPY ./config-${BUILD_CONFIG}/nginx-host-template.conf /etc/nginx/sites-available/template.conf
+COPY ./config-${BUILD_CONFIG}/nginx.conf /etc/nginx/nginx.conf
+COPY ./config-${BUILD_CONFIG}/php.ini /usr/local/etc/php/php.ini
+COPY ./config-${BUILD_CONFIG}/supervisord.conf /etc/supervisord.conf
+
 COPY ./container.sh /home/bin/container
-COPY ./nginx-host-template.conf /etc/nginx/sites-available/template.conf
 COPY ./start.sh /start.sh
 
 #Set volumes
