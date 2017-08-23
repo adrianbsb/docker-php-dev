@@ -5,13 +5,15 @@
 NGINX_HOST_TPL_FILE=/etc/nginx/sites-available/template.conf
 NGINX_HOST_CFG_FILE=/etc/nginx/sites-available/active.conf
 
-PHP_VERSION=$(php -v | grep --only-matching --perl-regexp "\\d\.\\d+\.\\d+" | head -n 1)
-PHP_MAJOR_VERSION=${PHP_VERSION:0:3}
+#PHP_VERSION=$(php -v | grep --only-matching --perl-regexp "\\d\.\\d+\.\\d+" | head -n 1)
+#PHP_MAJOR_VERSION=${PHP_VERSION:0:3}
 
 if [ -n "$SERVER_ROOT" ] ;
 then
+	echo "Server root set to ${SERVER_ROOT} ..."
 	echo "$SERVER_ROOT" >> /tmp/SERVER_ROOT
 else
+	echo "Server root set to /var/www ..."
 	SERVER_ROOT=/var/www
 fi
 
@@ -26,7 +28,6 @@ php -r "$PHP_COMMAND" >> /tmp/temporary.conf
 mv -f /tmp/temporary.conf $NGINX_HOST_CFG_FILE
 
 mkdir /etc/nginx/sites-enabled
-rm /etc/nginx/sites-enabled/active
 ln -s /etc/nginx/sites-available/active.conf /etc/nginx/sites-enabled/active
 
 
@@ -103,8 +104,18 @@ fi
 #Run app init script
 if [ -f "/var/www/init.sh" ] ;
 then
+  echo "Initializing app ... "	
   bash /var/www/init.sh
 else
-	#Download readme to /var/www
-	echo "<?php phpinfo();" >> /var/www/index.php
+	
+	if [ ! -f "/var/www/index.php" ] ;
+	then 	
+		
+		#Copy welcome file to index
+		cp /tmp/welcome.php "${SERVER_ROOT}/index.php"
+		
+	fi
+	
 fi
+
+echo "All done, starting services ..."

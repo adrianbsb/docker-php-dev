@@ -1,16 +1,21 @@
-#Pull php:7-fpm-alpine (https://store.docker.com/images/php)
-FROM php:7-fpm-alpine
+#Arguments for stage one
+ARG BUILD_VERSION=7
 
+#Pull php:$version-fpm-alpine (https://store.docker.com/images/php)
+FROM php:$BUILD_VERSION-fpm-alpine
+
+#Mantainer info
 MAINTAINER Adrian7 <adrian.silimon@yahoo.com>
 
-#Arguments
+#Arguments for stage two
 ARG BUILD_CONFIG=dev
 
 #Install
 
 RUN apk --no-cache add \
         libmcrypt-dev \
-        freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev \
+        freetype libpng libjpeg-turbo freetype-dev \
+		libpng-dev libjpeg-turbo-dev \
         wget \
         git \
         nginx \
@@ -39,13 +44,25 @@ RUN apk --no-cache add \
 	
 #Configure
 
-COPY ./config-${BUILD_CONFIG}/nginx-host-template.conf /etc/nginx/sites-available/template.conf
-COPY ./config-${BUILD_CONFIG}/nginx.conf /etc/nginx/nginx.conf
-COPY ./config-${BUILD_CONFIG}/php.ini /usr/local/etc/php/php.ini
+COPY ./config-${BUILD_CONFIG}/nginx/host.conf /etc/nginx/sites-available/template.conf
+COPY ./config-${BUILD_CONFIG}/nginx/nginx.conf /etc/nginx/nginx.conf
+
+COPY ./config-${BUILD_CONFIG}/php/php.ini /usr/local/etc/php/php.ini
+COPY ./config-${BUILD_CONFIG}/php/conf.d /usr/local/etc/php/conf.d
+
+COPY ./config-${BUILD_CONFIG}/fpm/fpm.conf /usr/local/etc/php-fpm.conf
+COPY ./config-${BUILD_CONFIG}/fpm/www.conf /usr/local/etc/php-fpm.d/www.conf
+
 COPY ./config-${BUILD_CONFIG}/supervisord.conf /etc/supervisord.conf
 
-COPY ./container.sh /home/bin/container
-COPY ./start.sh /start.sh
+COPY ./init-scripts/container.sh /home/bin/container
+COPY ./init-scripts/start.sh /start.sh
+COPY ./init-scripts/welcome.php /tmp/welcome.php
+
+ENV PHP_BUILD_CONFIG=$BUILD_CONFIG
+
+#Set working directory
+WORKDIR /
 
 #Set volumes
 
