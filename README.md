@@ -17,7 +17,7 @@ Example:
 
 `./build.sh devimage:latest --env dev --php 7.1.8`
 
-Then you can base your containers on the new built image: 
+Then you can start your container with the built image: 
 
 `docker run -d -p 31287:80 --name dev-container devimage:latest`
 
@@ -30,12 +30,12 @@ Or base your images on it (Dockerfile):
     
     EXPOSE 80
 
-Available PHP versions: 
+Available PHP versions:
 
- - 7.2.0beta2
- - 7.1.8 (default)
- - 7.0.22
- - 5.6.31
+ - 7.2-rc
+ - 7.1 (default)
+ - 7.0
+ - 5.6
 
 For a complete list see https://store.docker.com/images/php
 
