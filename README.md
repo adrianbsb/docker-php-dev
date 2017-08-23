@@ -1,10 +1,11 @@
-####Docker Nginx-PHP-FPM Image Builder
+Docker Nginx - PHP-FPM Image Builder
+=======
 
-Run ./build.sh to build/update your images. 
+Run ./build.sh to build your images. 
 
 Parameters: 
 
- - `name:tag` the name and tag to use for the resultimn docker image
+ - `name:tag` the name and tag to use for the resulting docker image
 
 Options:
 
