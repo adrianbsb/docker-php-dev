@@ -39,6 +39,9 @@ optional arguments:
  --help             displays this help message
  --env environment  use config-{env} configuration
  --php version      set php version / base image
+ --customize folder the folder under ./custom to build from the resulting image; 
+
+By default the script will build all folders in ./custom 
 
 EOM
 
@@ -62,17 +65,18 @@ success() {
 for arg in "$@"; do
   shift
   case "$arg" in
-    "--help") set -- "$@" "-h" ;;
-    "--env")  set -- "$@" "-e" ;;
-    "--php")  set -- "$@" "-p" ;;
-    *)        set -- "$@" "$arg"
+    "--help") 		set -- "$@" "-h" ;;
+    "--env")  		set -- "$@" "-e" ;;
+    "--php")  		set -- "$@" "-p" ;;
+	"--customize")  set -- "$@" "-c" ;;
+    *)        		set -- "$@" "$arg"
   esac
 done
 
 shift
 
 # Parse short options
-while getopts "e:p:" o; do
+while getopts "e:p:c:" o; do
     case "${o}" in
         e)
             e=${OPTARG}
@@ -80,6 +84,9 @@ while getopts "e:p:" o; do
         p)
             p=${OPTARG}
 			;;
+        c)
+            c=${OPTARG}
+			;;	
         *)
             usage
             ;;
@@ -90,6 +97,7 @@ shift $((OPTIND-1))
 
 CONFIG_DIR=$e
 CONFIG_VER=$p
+CUSTOMIZE=$c
 
 #Init defaults
 if 
@@ -136,7 +144,11 @@ if [ -d "$PWD/custom" ]; then
 	
 	for i in * ; do
 		
-		if [ -d "$i" ] && [ -f "${BUILD_DIR}/${i}/Dockerfile" ]; then 
+		if [ ! -z "$CUSTOMIZE" ] && [ "$i" != "$CUSTOMIZE" ]; then
+			continue
+		fi
+		
+		if [ -d "$i" ] && [ -f "${BUILD_DIR}/${i}/Dockerfile" ]; then  
 			
 			DOCKERFILE_PATH="${BUILD_DIR}/${i}/Dockerfile"
 	    	info "Building custom image $i:latest ..."
@@ -146,7 +158,9 @@ if [ -d "$PWD/custom" ]; then
 				--build-arg BUILD_FROM="${BUILDNAME}" \
 				"$BUILD_DIR/$i"
 			
-	  	fi
+		else 
+			warning "Folder ${i} can't be built. Dockerfile missing!"
+		fi	
 		
 	done
 	

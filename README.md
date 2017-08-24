@@ -12,23 +12,17 @@ Options:
  - `--env` builds the image 
 with configuration stored in config-{env} folder
  - `--php` selects php version (builds from the {version}-fpm-alpine base).
+ - `--customize folder` the name of the folder under `custom` to build from the resulting image. By default all folders under custom will be built.
+
+The script will automatically build your custom images by placing your Dockerfiles in the `custom` folder. Your image will have the name of the folder it is placed in, tagged with latest. E.g. for the example folder the image will be built as `example:latest`.
 
 Example:
 
-`./build.sh devimage:latest --env dev --php 7.1.8`
+`./build.sh phpdevbase:latest --env dev --php 7.1.8 --customize phpdev`
 
 Then you can start your container with the built image: 
 
-`docker run -d -p 31287:80 --name dev-container devimage:latest`
-
-Or base your images on it (Dockerfile):
-
-    FROM devimage:latest
-    
-    ENV SERVER_ROOT /var/www/public
-    ENV APP_ENV dev
-    
-    EXPOSE 80
+`docker run -d -p 31287:80 --name dev-container phpdev:latest`
 
 Available PHP versions:
 
