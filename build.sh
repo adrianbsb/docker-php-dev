@@ -125,7 +125,33 @@ info "Building image ${BUILDNAME} ...
 docker build -t $BUILDNAME \
 	--build-arg BUILD_CONFIG="${CONFIG_DIR}" \
     --build-arg BUILD_VERSION="${CONFIG_VER}" \
-	.	 		 
+	.
+
+#Build custom images based on the previously built image
+if [ -d "$PWD/custom" ]; then
+	
+	BUILD_DIR=$PWD/custom
+	
+	cd "$BUILD_DIR"
+	
+	for i in * ; do
+		
+		if [ -d "$i" ] && [ -f "${BUILD_DIR}/${i}/Dockerfile" ]; then 
+			
+			DOCKERFILE_PATH="${BUILD_DIR}/${i}/Dockerfile"
+	    	info "Building custom image $i:latest ..."
+			
+			docker build -t $i \
+				-f "${DOCKERFILE_PATH}" \
+				--build-arg BUILD_FROM="${BUILDNAME}" \
+				"$BUILD_DIR/$i"
+			
+	  	fi
+		
+	done
+	
+fi
+	 		 
  
  
 
