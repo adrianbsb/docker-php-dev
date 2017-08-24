@@ -1,12 +1,22 @@
 #!/usr/bin/env bash
 
+### Remove base image ssh key
+if [ -f "/root/.ssh/base_id_rsa" ] ; 
+then 
+	rm -rf /root/.ssh/base_id_rsa* 
+fi
+
+### Retrieve public ssh key (id_rsa.pub)
+if [ -f "/root/.ssh/id_rsa.pub" ] ;
+then
+	cp /root/.ssh/id_rsa.pub /var/local/id_rsa.pub
+	chown www-data /var/local/id_rsa.pub
+fi	 
+
 ### Set web server root folder according to env variable ###
 
 NGINX_HOST_TPL_FILE=/etc/nginx/sites-available/template.conf
 NGINX_HOST_CFG_FILE=/etc/nginx/sites-available/active.conf
-
-#PHP_VERSION=$(php -v | grep --only-matching --perl-regexp "\\d\.\\d+\.\\d+" | head -n 1)
-#PHP_MAJOR_VERSION=${PHP_VERSION:0:3}
 
 if [ -n "$SERVER_ROOT" ] ;
 then

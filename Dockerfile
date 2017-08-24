@@ -18,6 +18,7 @@ RUN apk --no-cache add \
 		libpng-dev libjpeg-turbo-dev \
         wget \
         git \
+		openssh \
         nginx \
         ca-certificates \
         supervisor \
@@ -43,6 +44,8 @@ RUN apk --no-cache add \
     && composer global require "hirak/prestissimo:^0.3" 
 	
 #Configure
+
+RUN ssh-keygen -f /root/.ssh/base_id_rsa -t rsa -N ''
 
 COPY ./config-${BUILD_CONFIG}/nginx/host.conf /etc/nginx/sites-available/template.conf
 COPY ./config-${BUILD_CONFIG}/nginx/nginx.conf /etc/nginx/nginx.conf

@@ -136,6 +136,12 @@ docker build -t $BUILDNAME \
 	.
 
 #Build custom images based on the previously built image
+
+if [ ! -z "$CUSTOMIZE" ] && [ ! -d "$PWD/custom/$CUSTOMIZE" ]; then 
+	warning "Folder ${i} can't be built. Folder missing!"
+	exit 1
+fi
+
 if [ -d "$PWD/custom" ]; then
 	
 	BUILD_DIR=$PWD/custom
