@@ -9,10 +9,10 @@ Parameters:
 
 Options:
 
- - `--env` builds the image 
+ - `--env env` builds the image 
 with configuration stored in config-{env} folder
- - `--php` selects php version (builds from the {version}-fpm-alpine base).
- - `--customize folder` the name of the folder under `custom` to build from the resulting image. By default all folders under custom will be built.
+ - `--php version` selects php version (builds from the {version}-fpm-alpine base).
+ - `--customize dir` the name of the folder under `custom` to build from the resulting image. A Dockerfile should be present in `custom/{dir}`. See example folder for a starter template. By default all folders under custom will be built.
 
 The script will automatically build your custom images by placing your Dockerfiles in the `custom` folder. Your image will have the name of the folder it is placed in, tagged with latest. E.g. for the example folder the image will be built as `example:latest`.
 
