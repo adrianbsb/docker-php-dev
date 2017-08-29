@@ -118,7 +118,7 @@ then
   bash /var/www/init.sh
 else
 	
-	if [ ! -f "/var/www/index.php" ] ;
+	if [ ! -f "${SERVER_ROOT}/index.php" ] ;
 	then 	
 		
 		#Copy welcome file to index
