@@ -1,18 +1,19 @@
-#Arguments for stage one
+# Arguments for stage one
 ARG BUILD_VERSION=7
 
-#Pull php:$version-fpm-alpine (https://store.docker.com/images/php)
+# Pull php:$version-fpm-alpine (https://store.docker.com/images/php)
 FROM php:$BUILD_VERSION-fpm-alpine
 
-#Mantainer info
+# Mantainer info
 MAINTAINER Adrian7 <adrian.silimon@yahoo.com>
 
-#Arguments for stage two
+# Arguments for stage two
 ARG BUILD_CONFIG=dev
 
-#Install
+# Install
 
-RUN apk --no-cache add libmcrypt-dev autoconf gcc freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev make libc-dev \
+RUN apk --no-cache add libmcrypt-dev autoconf gcc freetype libpng libjpeg-turbo freetype-dev libpng-dev \
+        libjpeg-turbo-dev make libc-dev pcre-dev \
         wget git openssh nginx ca-certificates supervisor bash \
 	&& pecl install mcrypt-1.0.1 xdebug \
 	&& docker-php-ext-enable mcrypt xdebug \
@@ -48,7 +49,7 @@ COPY ./config-${BUILD_CONFIG}/supervisord.conf /etc/supervisord.conf
 
 COPY ./init-scripts/container.sh /home/bin/container
 COPY ./init-scripts/start.sh /start.sh
-COPY ./init-scripts/welcome.php /tmp/welcome.php
+COPY ./init-scripts/welcome.php /home/welcome.php
 
 ENV PHP_BUILD_CONFIG=$BUILD_CONFIG
 

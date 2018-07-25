@@ -122,7 +122,7 @@ else
 	then 	
 		
 		#Copy welcome file to index
-		cp /tmp/welcome.php "${SERVER_ROOT}/index.php"
+		cp /home/welcome.php "${SERVER_ROOT}/index.php"
 		
 	fi
 	
