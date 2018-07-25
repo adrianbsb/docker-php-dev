@@ -12,23 +12,11 @@ ARG BUILD_CONFIG=dev
 
 #Install
 
-RUN apk --no-cache add \
-        libmcrypt-dev \
-        freetype libpng libjpeg-turbo freetype-dev \
-		libpng-dev libjpeg-turbo-dev \
-        wget \
-        git \
-		openssh \
-        nginx \
-        ca-certificates \
-        supervisor \
-        bash \
-    && docker-php-ext-install \
-        mcrypt \
-        mbstring \
-        mysqli \
-        pdo_mysql \
-        opcache \
+RUN apk --no-cache add libmcrypt-dev autoconf gcc freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev make libc-dev \
+        wget git openssh nginx ca-certificates supervisor bash \
+	&& pecl install mcrypt-1.0.1 xdebug \
+	&& docker-php-ext-enable mcrypt xdebug \
+    && docker-php-ext-install mbstring mysqli pdo_mysql opcache \
     && docker-php-ext-configure gd \
         --with-gd \
         --with-freetype-dir=/usr/include/ \
