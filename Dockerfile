@@ -36,21 +36,27 @@ RUN apk --no-cache add libmcrypt-dev autoconf gcc freetype libpng libjpeg-turbo 
 
 RUN ssh-keygen -f /root/.ssh/base_id_rsa -t rsa -N ''
 
+# Nginx Config.
 COPY ./config-${BUILD_CONFIG}/nginx/host.conf /etc/nginx/sites-available/template.conf
 COPY ./config-${BUILD_CONFIG}/nginx/nginx.conf /etc/nginx/nginx.conf
 
+# PHP Language Configuration
 COPY ./config-${BUILD_CONFIG}/php/php.ini /usr/local/etc/php/php.ini
 COPY ./config-${BUILD_CONFIG}/php/conf.d /usr/local/etc/php/conf.d
 
+# PHP-FPM Config.
 COPY ./config-${BUILD_CONFIG}/fpm/fpm.conf /usr/local/etc/php-fpm.conf
 COPY ./config-${BUILD_CONFIG}/fpm/www.conf /usr/local/etc/php-fpm.d/www.conf
 
+# Supervisord
 COPY ./config-${BUILD_CONFIG}/supervisord.conf /etc/supervisord.conf
 
+# Init scripts
 COPY ./init-scripts/container.sh /home/bin/container
 COPY ./init-scripts/start.sh /start.sh
 COPY ./init-scripts/welcome.php /home/welcome.php
 
+# Set env
 ENV PHP_BUILD_CONFIG=$BUILD_CONFIG
 
 #Set working directory
