@@ -4,10 +4,13 @@
 if [ ! -f __initialized ] ;
 then
 
+    # Remove default host config
+    rm /etc/nginx/conf.d/default.conf
+
     CTIME=`date +"%F %T"`
     echo  "$CTIME" >> __initialized
 
-	#Execute container script
+	# Execute container script
     bash /home/bin/container
 
 fi

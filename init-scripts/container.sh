@@ -76,7 +76,15 @@ IFS=$SAVEIFS
 ### Run composer install & app bootstrap scripts ###
 cd /var/www
 
-touch .env
+# Copy env file
+
+if [ -f "/var/www/.env.example" ] ; then
+    cp -n .env.example .env
+fi
+
+if [ -f "/var/www/.env.dist" ] ; then
+    cp -n .env.dist .env
+fi
 
 #Run composer install
 if [ -f "/var/www/composer.json" ] ;
@@ -106,7 +114,10 @@ then
     	fi
 
 	else
+
+	    # Assume production
     	composer install --no-dev
+
 	fi
 
 fi
@@ -114,8 +125,13 @@ fi
 #Run app init script
 if [ -f "/var/www/init.sh" ] ;
 then
-  echo "Initializing app ... "	
+
+  echo "::::::::::::::::::::::::::::::::::::::::::::";
+  echo "Initializing app ... "
+  echo "::::::::::::::::::::::::::::::::::::::::::::";
+
   bash /var/www/init.sh
+
 else
 	
 	if [ ! -f "${SERVER_ROOT}/index.php" ] ;
@@ -128,4 +144,6 @@ else
 	
 fi
 
+echo "::::::::::::::::::::::::::::::::::::::::::::";
 echo "All done, starting services ..."
+echo "::::::::::::::::::::::::::::::::::::::::::::";
