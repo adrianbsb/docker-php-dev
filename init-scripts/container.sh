@@ -3,7 +3,7 @@
 ### Remove base image ssh key
 if [ -f "/root/.ssh/base_id_rsa" ] ; 
 then 
-	rm -rf /root/.ssh/base_id_rsa* 
+	rm -rf /root/.ssh/base_id_rsa*
 fi
 
 ### Retrieve public ssh key (id_rsa.pub)
@@ -79,6 +79,7 @@ cd /var/www
 # Copy env file
 
 if [ -f "/var/www/.env.example" ] ; then
+    echo "Copying .env.example to .env"
     cp -n .env.example .env
 fi
 
@@ -86,9 +87,17 @@ if [ -f "/var/www/.env.dist" ] ; then
     cp -n .env.dist .env
 fi
 
-#Run composer install
+# Create Xdebug log file
+mkdir -p /var/log/xdebug
+touch /var/log/xdebug/remote.log && chmod 777 /var/log/xdebug/remote.log
+
+# Run composer install
 if [ -f "/var/www/composer.json" ] ;
 then
+
+    echo "::::::::::::::::::::::::::::::::::::::::::::";
+    echo "Installing dependencies ... "
+    echo "::::::::::::::::::::::::::::::::::::::::::::";
 
 	if [ -n "$APP_ENV" ] ;
 	then
