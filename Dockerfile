@@ -14,7 +14,7 @@ ARG BUILD_CONFIG=dev
 
 RUN apk --no-cache add libmcrypt-dev autoconf gcc freetype libpng libjpeg-turbo freetype-dev libpng-dev \
         libjpeg-turbo-dev make libc-dev pcre-dev \
-        wget git openssh nginx ca-certificates supervisor bash \
+        openssh wget git nginx ca-certificates supervisor bash \
 	&& pecl install mcrypt-1.0.1 xdebug \
 	&& docker-php-ext-enable mcrypt xdebug \
     && docker-php-ext-install mbstring mysqli pdo_mysql opcache \
@@ -65,6 +65,12 @@ WORKDIR /
 #Set volumes
 
 VOLUME /var/www
+
+# Expose ports
+
+EXPOSE 9000
+EXPOSE 443
+EXPOSE 80
 
 #Entrypoint
 

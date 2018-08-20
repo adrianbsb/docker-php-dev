@@ -78,13 +78,11 @@ cd /var/www
 
 # Copy env file
 
-if [ -f "/var/www/.env.example" ] ; then
-    echo "Copying .env.example to .env"
-    cp -n .env.example .env
-fi
+if [ ! -f "/var/www/.env" ]; then
 
-if [ -f "/var/www/.env.dist" ] ; then
-    cp -n .env.dist .env
+    if [ -f "/var/www/.env.dist" ] ; then cp .env.dist .env; fi
+    if [ -f "/var/www/.env.example" ] ; then cp .env.example .env; fi
+
 fi
 
 # Create Xdebug log file
