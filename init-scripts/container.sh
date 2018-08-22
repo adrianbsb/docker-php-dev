@@ -11,7 +11,11 @@ if [ -f "/root/.ssh/id_rsa.pub" ] ;
 then
 	cp /root/.ssh/id_rsa.pub /var/local/id_rsa.pub
 	chown www-data /var/local/id_rsa.pub
-fi	 
+fi
+
+### Create Xdebug log file
+mkdir -p /var/log/xdebug
+touch /var/log/xdebug/remote.log && chmod 777 /var/log/xdebug/remote.log
 
 ### Set web server root folder according to env variable ###
 
@@ -76,6 +80,12 @@ IFS=$SAVEIFS
 ### Run composer install & app bootstrap scripts ###
 cd /var/www
 
+# Check for delay start
+if [ -z ${DELAY_START+x} ]; then true; else
+    echo "Delaying container start for ${DELAY_START} ...";
+    sleep ${DELAY_START};
+fi
+
 # Copy env file
 
 if [ ! -f "/var/www/.env" ]; then
@@ -84,10 +94,6 @@ if [ ! -f "/var/www/.env" ]; then
     if [ -f "/var/www/.env.example" ] ; then cp .env.example .env; fi
 
 fi
-
-# Create Xdebug log file
-mkdir -p /var/log/xdebug
-touch /var/log/xdebug/remote.log && chmod 777 /var/log/xdebug/remote.log
 
 # Run composer install
 if [ -f "/var/www/composer.json" ] ;
